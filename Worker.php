@@ -631,13 +631,13 @@ class Worker
             'status',
             'connections',
         );
-        if (!isset($argv[1]) || !in_array($argv[1], $available_commands)) {
+        if (!isset($argv[2]) || !in_array($argv[2], $available_commands)) {
             exit("Usage: php yourfile.php {" . implode('|', $available_commands) . "}\n");
         }
 
         // Get command.
-        $command  = trim($argv[1]);
-        $command2 = isset($argv[2]) ? $argv[2] : '';
+        $command  = trim($argv[2]);
+        $command2 = isset($argv[3]) ? $argv[3] : '';
 
         // Start command.
         $mode = '';

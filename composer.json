@@ -1,13 +1,14 @@
 {
-    "name": "workerman/workerman",
+    "name": "cheukpang/think-worker",
     "type": "library",
     "keywords": [
         "event-loop",
-        "asynchronous"
+        "asynchronous",
+        "thinkphp 3.2.3"
     ],
     "homepage": "http://www.workerman.net",
     "license": "MIT",
-    "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.",
+    "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.This library is match for thinkphp v3.2.x cli mode",
     "authors": [
         {
             "name": "walkor",
