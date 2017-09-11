@@ -12,7 +12,7 @@ POSIX and PCNTL extensions for PHP
 ## Installation
 
 ```
-composer require workerman/workerman
+composer require cheukpang/think-worker
 ```
 
 ## Basic Usage
