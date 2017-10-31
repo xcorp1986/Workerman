@@ -59,19 +59,19 @@ class ThinkWorker extends Worker
                 $mode = 'in DEBUG mode';
             }
         }
-        self::log("Workerman[$start_file] $command $mode");
+        static::log("Workerman[$start_file] $command $mode");
 
         // Get master process PID.
-        $master_pid = is_file(self::$pidFile) ? file_get_contents(self::$pidFile) : 0;
+        $master_pid = is_file(static::$pidFile) ? file_get_contents(static::$pidFile) : 0;
         $master_is_alive = $master_pid && @posix_kill($master_pid, 0) && posix_getpid() != $master_pid;
         // Master is still alive?
         if ($master_is_alive) {
             if ($command === 'start') {
-                self::log("Workerman[$start_file] already running");
+                static::log("Workerman[$start_file] already running");
                 exit;
             }
         } elseif ($command !== 'start' && $command !== 'restart') {
-            self::log("Workerman[$start_file] not run");
+            static::log("Workerman[$start_file] not run");
             exit;
         }
 
@@ -84,8 +84,8 @@ class ThinkWorker extends Worker
                 break;
             case 'status':
                 while (1) {
-                    if (is_file(self::$_statisticsFile)) {
-                        @unlink(self::$_statisticsFile);
+                    if (is_file(static::$_statisticsFile)) {
+                        @unlink(static::$_statisticsFile);
                     }
                     // Master process will send SIGUSR2 signal to all child processes.
                     posix_kill($master_pid, SIGUSR2);
@@ -94,23 +94,23 @@ class ThinkWorker extends Worker
                     // Clear terminal.
                     echo chr(27).chr(91).chr(72).chr(27).chr(91).chr(50).chr(74);
                     // Echo status data.
-                    echo self::formatStatusData();
+                    echo static::formatStatusData();
                 }
                 exit(0);
             case 'connections':
-                if (is_file(self::$_statisticsFile)) {
-                    @unlink(self::$_statisticsFile);
+                if (is_file(static::$_statisticsFile)) {
+                    @unlink(static::$_statisticsFile);
                 }
                 // Master process will send SIGIO signal to all child processes.
                 posix_kill($master_pid, SIGIO);
                 // Waiting amoment.
                 usleep(500000);
                 // Display statisitcs data from a disk file.
-                @readfile(self::$_statisticsFile);
+                @readfile(static::$_statisticsFile);
                 exit(0);
             case 'restart':
             case 'stop':
-                self::log("Workerman[$start_file] is stoping ...");
+                static::log("Workerman[$start_file] is stoping ...");
                 // Send stop signal to master process.
                 $master_pid && posix_kill($master_pid, SIGINT);
                 // Timeout.
@@ -122,7 +122,7 @@ class ThinkWorker extends Worker
                     if ($master_is_alive) {
                         // Timeout?
                         if (time() - $start_time >= $timeout) {
-                            self::log("Workerman[$start_file] stop fail");
+                            static::log("Workerman[$start_file] stop fail");
                             exit;
                         }
                         // Waiting amoment.
@@ -130,7 +130,7 @@ class ThinkWorker extends Worker
                         continue;
                     }
                     // Stop success.
-                    self::log("Workerman[$start_file] stop success");
+                    static::log("Workerman[$start_file] stop success");
                     if ($command === 'stop') {
                         exit(0);
                     }
@@ -142,7 +142,7 @@ class ThinkWorker extends Worker
                 break;
             case 'reload':
                 posix_kill($master_pid, SIGUSR1);
-                self::log("Workerman[$start_file] reload");
+                static::log("Workerman[$start_file] reload");
                 exit;
             default :
                 exit("Usage: php yourfile.php {".implode('|', $available_commands)."}\n");
